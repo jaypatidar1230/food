@@ -1,0 +1,74 @@
+[
+    {
+        "id": 0,
+        "img": "/assets/1.png",
+        "title": "Veg Sandwich",
+        "category": "Fast Food",
+        "price": 5.00,
+        "veg": true
+    },
+    {
+        "id": 1,
+        "img": "/assets/2.png",
+        "title": "Shrips Rice",
+        "category": "Fast Food",
+        "price": 3.00,
+        "veg": true
+    },
+    {
+        "id": 2,
+        "img": "/assets/3.png",
+        "title": "Cheese Bresd",
+        "category": "Fast Food",
+        "price": 4.00,
+        "veg": true
+    },
+    {
+        "id": 3,
+        "img": "/assets/4.png",
+        "title": "Veg Chese Sandwich",
+        "category": "Fast Food",
+        "price": 5.00,
+        "veg": true
+    },
+    {
+        "id": 4,
+        "img": "/assets/5.png",
+        "title": "Margherita Pizza",
+        "category": "Fast Food",
+        "price": 5.00,
+        "veg": true
+    },
+    {
+        "id": 5,
+        "img": "/assets/6.png",
+        "title": "Veg Noodle",
+        "category": "Chinese",
+        "price": 3.00,
+        "veg": true
+    },
+    {
+        "id": 6,
+        "img": "/assets/7.png",
+        "title": "Mexican Pizza",
+        "category": "Fast Food",
+        "price": 5.00,
+        "veg": true
+    },
+    {
+        "id": 7,
+        "img": "/assets/8.png",
+        "title": "Mix Noodle",
+        "category": "Chinese",
+        "price": 5.00,
+        "veg": true
+    },
+    {
+        "id": 8,
+        "img": "/assets/9.png",
+        "title": "Fish",
+        "category": "Sea Food",
+        "price": 8.00,
+        "veg": false
+    }
+]

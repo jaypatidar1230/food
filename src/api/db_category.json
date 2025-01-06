@@ -1,0 +1,17 @@
+[
+    {
+        "id": 0,
+        "img": "/assets/ic_fastfood.png",
+        "title": "Fast Food"
+    },
+    {
+        "id": 1,
+        "img": "/assets/ic_Seafood.png",
+        "title": "Sea Food"
+    },
+    {
+        "id": 2,
+        "img": "/assets/ic_chinese.png",
+        "title": "Chinese"
+    }
+]
