@@ -5,7 +5,6 @@ function RightContent() {
   return (
     <div className="flex flex-col">
       <Category />
-      <Items />
     </div>
   );
 }

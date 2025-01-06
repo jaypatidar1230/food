@@ -1,12 +1,12 @@
 import React from "react";
 import item from "../api/db_items.json";
 
-function Items() {
+function Items({categoryId}) {
   return (
     <div className="grid grid-cols-4 gap-4 pl-3">
-      {item.map(({id, category, img, price, title, veg}) => {
+      {item.filter((item) => item.categoryId === categoryId || categoryId == 0).map(({id, img, price, title, veg}) => {
         return (
-          <div key={id} className="bg-gray-500 rounded-xl text-white">
+          <div key={id} className="bg-gray-500 rounded-xl text-white cursor-pointer">
             <img
               src={img}
               alt={title}
