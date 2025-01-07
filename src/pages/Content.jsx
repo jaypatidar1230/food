@@ -4,8 +4,8 @@ import LeftContent from "../components/LeftContent";
 
 function Content() {
   return (
-    <div className="flex">
-      <div className="w-1/3 bg-purple-500">
+    <div className="flex bg-gray-100">
+      <div className="w-1/3 bg-white">
         <LeftContent />
       </div>
       <div className="w-2/3">

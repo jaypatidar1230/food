@@ -16,7 +16,7 @@ function Category() {
               <li
                 key={id}
                 className={`w-[95px] ${
-                  bgId === id ? "bg-yellow-400" : "bg-gray-500"
+                  bgId === id ? "bg-yellow-400" : "bg-white"
                 } h-[95px] rounded-xl p-2 mx-1 cursor-pointer `}
                 onClick={() => {
                   setCategoryId(id);
