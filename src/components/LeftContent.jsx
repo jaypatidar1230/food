@@ -29,11 +29,33 @@ function LeftContent() {
   const calculateSubTotal = () =>
     cartData.reduce((sum, item) => sum + item.price * item.qnt, 0);
 
+  const handleIncrement = (id) => {
+    const updatedCart = cartData.map((item) =>
+      item.id === id ? { ...item, qnt: item.qnt + 1 } : item
+    );
+    setCartData(updatedCart);
+    localStorage.setItem("cartItem", JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event("cartUpdated"));
+  };
+
+  const handleDecrement = (id) => {
+    const updatedCart = cartData.map((item) =>
+      item.id === id && item.qnt > 1 ? { ...item, qnt: item.qnt - 1 } : item
+    );
+    setCartData(updatedCart);
+    localStorage.setItem("cartItem", JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event("cartUpdated"));
+  };
+
   return (
     <div className="pt-3">
       {!showOrder ? (
         <div className="p-12">
-          <img src="/assets/img_noorder.png" alt="order" className="w-64 h-64" />
+          <img
+            src="/assets/img_noorder.png"
+            alt="order"
+            className="w-64 h-64"
+          />
           <div className="text-2xl font-bold pb-4">
             <h2>You've no</h2>
             <h2>order in process from</h2>
@@ -60,10 +82,18 @@ function LeftContent() {
             <table className="w-full text-sm text-left rtl:text-right text-black overflow-scroll">
               <thead className="text-xs text-gray-400 uppercase bg-gray-200">
                 <tr>
-                  <th scope="col" className="px-6 py-3">Item</th>
-                  <th scope="col" className="px-6 py-3">Price</th>
-                  <th scope="col" className="px-6 py-3">Qnt.</th>
-                  <th scope="col" className="px-6 py-3">Total($)</th>
+                  <th scope="col" className="px-6 py-3">
+                    Item
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Price
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Qnt.
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Total($)
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -72,14 +102,27 @@ function LeftContent() {
                     key={id}
                     className="bg-white border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-300"
                   >
-                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                    >
                       {name}
                     </th>
                     <td className="px-6 py-4">{price}.00</td>
                     <td className="px-6 py-4 flex items-center">
-                      <button className="bg-yellow-400 rounded-full w-5 h-5 text-white font-bold mx-2">-</button>
+                      <button
+                        className="bg-yellow-400 rounded-full w-5 h-5 text-white font-bold mx-2"
+                        onClick={() => handleDecrement(id)}
+                      >
+                        -
+                      </button>
                       {qnt}
-                      <button className="bg-yellow-400 rounded-full w-5 h-5 text-white font-bold mx-2">+</button>
+                      <button
+                        className="bg-yellow-400 rounded-full w-5 h-5 text-white font-bold mx-2"
+                        onClick={() => handleIncrement(id)}
+                      >
+                        +
+                      </button>
                     </td>
                     <td className="px-6 py-4">{(price * qnt).toFixed(2)}</td>
                   </tr>
@@ -89,29 +132,42 @@ function LeftContent() {
             <table>
               <tbody>
                 <tr className="bg-white">
-                  <td className="font-medium text-gray-900 whitespace-nowrap">Sub total</td>
+                  <td className="font-medium text-gray-900 whitespace-nowrap">
+                    Sub total
+                  </td>
                   <td>{calculateSubTotal().toFixed(2)}</td>
                 </tr>
                 <tr className="bg-white">
-                  <td className="font-medium text-gray-900 whitespace-nowrap">Tax</td>
+                  <td className="font-medium text-gray-900 whitespace-nowrap">
+                    Tax
+                  </td>
                   <td>3.00</td>
                 </tr>
                 <tr className="bg-white">
-                  <td className="font-medium text-gray-900 whitespace-nowrap">Order Charge</td>
+                  <td className="font-medium text-gray-900 whitespace-nowrap">
+                    Order Charge
+                  </td>
                   <td>0.00</td>
                 </tr>
                 <tr className="bg-white">
-                  <td className="font-medium text-gray-900 whitespace-nowrap">Amount to Pay</td>
+                  <td className="font-medium text-gray-900 whitespace-nowrap">
+                    Amount to Pay
+                  </td>
                   <td>{(calculateSubTotal() + 3).toFixed(2)}</td>
                 </tr>
                 <tr>
                   <td>
-                    <button className="bg-red-500 w-full h-12" onClick={handleCancelOrder}>
+                    <button
+                      className="bg-red-500 w-full h-12"
+                      onClick={handleCancelOrder}
+                    >
                       Cancel
                     </button>
                   </td>
                   <td>
-                    <button className="bg-yellow-500 w-full h-12">Place Order</button>
+                    <button className="bg-yellow-500 w-full h-12">
+                      Place Order
+                    </button>
                   </td>
                 </tr>
               </tbody>
