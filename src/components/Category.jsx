@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import category from "../api/db_category.json";
 import Items from "./Items";
+import { Icon } from "@iconify/react";
 
 function Category() {
   const [categoryId, setCategoryId] = useState(0);
@@ -39,11 +40,15 @@ function Category() {
           }}
         >
           <div className="flex">
-            <input
-              type="search"
-              placeholder="Search Items"
-              className="w-96 border-gray-500 border-2 rounded-xl pl-3 h-10"
-            />
+          <div className="relative w-96">
+  <input
+    type="search"
+    placeholder="Search Items"
+    className="w-full border-gray-500 border-2 rounded-xl pl-10 h-10"
+  />
+  <Icon icon="mdi:magnify" className="absolute left-3 top-2.5 text-gray-500 text-xl" />
+</div>
+
             <button
               type="submit"
               className="bg-yellow-400 w-20 rounded-xl ml-3"

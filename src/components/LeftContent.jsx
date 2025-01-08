@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 function LeftContent() {
   const [showOrder, setShowOrder] = useState(false);
   const [showPay, setShowPay] = useState(false);
   const [cartData, setCartData] = useState([]);
+  const [orderData, setOrderData] = useState({
+    name: "",
+    type: "",
+    payment: "",
+  });
 
   useEffect(() => {
     const handleCartUpdate = () => {
       const savedCart = JSON.parse(localStorage.getItem("cartItem")) || [];
       setCartData(savedCart);
       setShowOrder(savedCart.length > 0);
+      setShowPay(false); // Reset payment view whenever the cart is updated
     };
 
     window.addEventListener("cartUpdated", handleCartUpdate);
@@ -49,6 +56,35 @@ function LeftContent() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
+  const handleSubmit = async () => {
+    // Calculate total items and total amount
+    const totalItems = cartData.reduce((sum, item) => sum + item.qnt, 0);
+    const totalAmount = calculateSubTotal() + 3;
+    const createdAt = new Date().toLocaleString();
+  
+    // Add totalItems and totalAmount to orderData
+    const updatedOrderData = {
+      ...orderData,
+      createdAt,
+      totalItems,
+      totalAmount: totalAmount.toFixed(2),
+    };
+  
+    console.log(updatedOrderData);
+  
+    try {
+      const res = await axios.post(
+        "https://677263d3ee76b92dd4921ff8.mockapi.io/Transaction",
+        updatedOrderData
+      );
+      console.log("Data submitted successfully:", res.data);
+      handleCancelOrder(); // Clear cart after submitting the order
+    } catch (error) {
+      console.error("There was an error submitting the data:", error);
+    }
+  };
+  
+
   return (
     <div className="pt-3">
       {!showOrder ? (
@@ -69,7 +105,11 @@ function LeftContent() {
           <div className="pt-12">
             <button
               className="px-2 h-12 rounded-full w-40 font-bold bg-yellow-500 text-white"
-              onClick={() => setShowOrder(true)}
+              onClick={() => {
+                if (cartData.length > 0) {
+                  setShowOrder(true);
+                }
+              }}
             >
               Add Order
             </button>
@@ -100,8 +140,9 @@ function LeftContent() {
                 value="cash"
                 id="cash"
                 className="mr-2"
+                onChange={() => setOrderData({ ...orderData, payment: "Cash" })}
               />
-              <label className="font-semibold" for="cash">
+              <label className="font-semibold" htmlFor="cash">
                 Cash
               </label>
               <input
@@ -110,8 +151,9 @@ function LeftContent() {
                 value="card"
                 id="card"
                 className="mr-2 ml-7"
+                onChange={() => setOrderData({ ...orderData, payment: "Card" })}
               />
-              <label className="font-semibold" for="card">
+              <label className="font-semibold" htmlFor="card">
                 Card
               </label>
             </div>
@@ -128,8 +170,11 @@ function LeftContent() {
                 value="Takeaway"
                 id="Takeaway"
                 className="mr-2"
+                onChange={() =>
+                  setOrderData({ ...orderData, type: "Takeaway" })
+                }
               />
-              <label className="font-semibold" for="Takeaway">
+              <label className="font-semibold" htmlFor="Takeaway">
                 Takeaway
               </label>
               <input
@@ -138,8 +183,9 @@ function LeftContent() {
                 value="Dine-in"
                 id="Dine-in"
                 className="mr-2 ml-7"
+                onChange={() => setOrderData({ ...orderData, type: "Dine-in" })}
               />
-              <label className="font-semibold" for="Dine-in">
+              <label className="font-semibold" htmlFor="Dine-in">
                 Dine-in
               </label>
               <select className="mr-2 ml-7 font-semibold">
@@ -167,6 +213,9 @@ function LeftContent() {
                 className="rounded-full my-3 bg-slate-200 h-10 pl-5 "
                 placeholder="Enter Your Name"
                 type="text"
+                onChange={(e) =>
+                  setOrderData({ ...orderData, name: e.target.value })
+                }
               />
               <input
                 className="rounded-full my-3 bg-slate-200 h-10 pl-5 "
@@ -181,7 +230,7 @@ function LeftContent() {
             >
               <span className="font-bold text-white">Cancel</span>
             </button>
-            <button className="bg-[#fbaf03] w-1/2 h-12 ">
+            <button className="bg-[#fbaf03] w-1/2 h-12 " onClick={handleSubmit}>
               <span className="font-bold text-white">Submit</span>
             </button>
           </div>
