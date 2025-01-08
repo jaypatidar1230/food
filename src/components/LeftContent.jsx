@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 function LeftContent() {
   const [showOrder, setShowOrder] = useState(false);
+  const [showPay, setShowPay] = useState(false);
   const [cartData, setCartData] = useState([]);
 
   useEffect(() => {
@@ -39,9 +40,10 @@ function LeftContent() {
   };
 
   const handleDecrement = (id) => {
-    const updatedCart = cartData.map((item) =>
-      item.id === id && item.qnt > 1 ? { ...item, qnt: item.qnt - 1 } : item
-    );
+    const updatedCart = cartData
+      .map((item) => (item.id === id ? { ...item, qnt: item.qnt - 1 } : item))
+      .filter((item) => item.qnt > 0); // Remove items with quantity 0
+
     setCartData(updatedCart);
     localStorage.setItem("cartItem", JSON.stringify(updatedCart));
     window.dispatchEvent(new Event("cartUpdated"));
@@ -76,6 +78,114 @@ function LeftContent() {
             </button>
           </div>
         </div>
+      ) : showPay ? (
+        cartData.length > 0 && (
+          <div className="px-4 py-3">
+            <h3 className="pt-4 pb-3 mb-4 text-lg font-semibold">
+              Amount to Pay{" "}
+              <span className="font-bold text-indigo-700">
+                ${(calculateSubTotal() + 3).toFixed(2)}
+              </span>
+            </h3>
+            <label
+              className="pb-3 font-semibold text-gray-600/70"
+              htmlFor="paymentMethod"
+            >
+              Select Payment Method
+            </label>
+            <div className="pt-3 pb-2 mb-6">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="cash"
+                id="cash"
+                className="mr-2"
+              />
+              <label className="font-semibold" for="cash">
+                Cash
+              </label>
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="card"
+                id="card"
+                className="mr-2 ml-7"
+              />
+              <label className="font-semibold" for="card">
+                Card
+              </label>
+            </div>
+            <label
+              className="pb-3 font-semibold text-gray-600/70"
+              htmlFor="orderType"
+            >
+              Order type
+            </label>
+            <div className="pt-3 pb-2 mb-6">
+              <input
+                type="radio"
+                name="orderType"
+                value="Takeaway"
+                id="Takeaway"
+                className="mr-2"
+              />
+              <label className="font-semibold" for="Takeaway">
+                Takeaway
+              </label>
+              <input
+                type="radio"
+                name="orderType"
+                value="Dine-in"
+                id="Dine-in"
+                className="mr-2 ml-7"
+              />
+              <label className="font-semibold" for="Dine-in">
+                Dine-in
+              </label>
+              <select className="mr-2 ml-7 font-semibold">
+                <option>Select Table</option>
+                <option>Table No 01</option>
+                <option>Table No 02</option>
+                <option>Table No 03</option>
+                <option>Table No 04</option>
+                <option>Table No 05</option>
+                <option>Table No 06</option>
+                <option>Table No 07</option>
+                <option>Table No 08</option>
+                <option>Table No 09</option>
+                <option>Table No 10</option>
+              </select>
+            </div>
+            <div className="flex flex-col">
+              <label
+                className="pb-3 font-semibold text-gray-600/70"
+                htmlFor="name"
+              >
+                Customer Info (Optional)
+              </label>
+              <input
+                className="rounded-full my-3 bg-slate-200 h-10 pl-5 "
+                placeholder="Enter Your Name"
+                type="text"
+              />
+              <input
+                className="rounded-full my-3 bg-slate-200 h-10 pl-5 "
+                placeholder="Enter Your Number"
+                type="number"
+                min={0}
+              />
+            </div>
+            <button
+              className="bg-[#EF1010] w-1/2 h-12 mt-12"
+              onClick={() => setShowPay(false)}
+            >
+              <span className="font-bold text-white">Cancel</span>
+            </button>
+            <button className="bg-[#fbaf03] w-1/2 h-12 ">
+              <span className="font-bold text-white">Submit</span>
+            </button>
+          </div>
+        )
       ) : (
         <div className="block w-[486px]">
           <div className="overflow-x-hidden h-full flex flex-col justify-between">
@@ -165,7 +275,14 @@ function LeftContent() {
                     </button>
                   </td>
                   <td>
-                    <button className="bg-yellow-500 w-full h-12">
+                    <button
+                      className="bg-yellow-500 w-full h-12"
+                      onClick={() => {
+                        if (cartData.length > 0) {
+                          setShowPay(true);
+                        }
+                      }}
+                    >
                       Place Order
                     </button>
                   </td>
