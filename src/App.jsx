@@ -1,11 +1,24 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Home from "./pages/home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Initialize state from localStorage
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('isLoggedIn') === 'true';
+  });
+
+  // Update localStorage when login state changes
+  useEffect(() => {
+    localStorage.setItem('isLoggedIn', isLoggedIn.toString());
+  }, [isLoggedIn]);
+
+  // Handle logout
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+  };
 
   return (
     <BrowserRouter>
@@ -25,7 +38,11 @@ function App() {
         <Route
           path="/home"
           element={
-            isLoggedIn ? <Home /> : <Navigate to="/login" replace />
+            isLoggedIn ? (
+              <Home onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
           }
         />
       </Routes>
