@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Signup() {
+function Signup({onLogin}) {
   const [formData, setFormData] = useState({
     name: "",
     number: "",
@@ -37,7 +37,9 @@ function Signup() {
       // Clear the form and navigate to the login page
       setFormData({ name: "", number: "", password: "" });
       setErrorMessage("");
-      navigate("/login");
+      localStorage.setItem('isLoggedIn', 'true');
+      onLogin(); // Set login status in App component
+      navigate("/home"); // Redirect to home page
     } catch (error) {
       console.error("There was an error submitting the data:", error);
       setErrorMessage("An error occurred while submitting the data.");

@@ -34,7 +34,7 @@ function App() {
         />
         <Route
           path="/signup"
-          element={<Signup />}
+          element={<Signup onLogin={() => setIsLoggedIn(true)}/>}
         />
         <Route
           path="/home"

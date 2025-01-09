@@ -2,6 +2,7 @@ import React from "react";
 import RightContent from "../components/RightContent";
 import LeftContent from "../components/LeftContent";
 import TransactionContent from "../components/TransactionContent";
+import BookingContent from "../components/BookingContent";
 
 function Content({ selectedContent }) {
   return (
@@ -19,6 +20,11 @@ function Content({ selectedContent }) {
       {selectedContent === "Transaction" && (
         <div className="w-full">
           <TransactionContent />
+        </div>
+      )}
+      {selectedContent === "Booking" && (
+        <div className="w-full">
+          <BookingContent />
         </div>
       )}
     </div>
