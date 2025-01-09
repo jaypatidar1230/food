@@ -3,10 +3,12 @@ import logo from "/assets/logo1.png";
 import menu from "/assets/rs_1.png";
 import { Icon } from "@iconify/react";
 import Slider from "./Slider";
+import { useNavigate } from "react-router-dom";
 
-function Header({ onNavSelect }) {
+function Header({ onNavSelect, onLogout }) {
   const [isSliderOpen, setIsSliderOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("POS");
+  const navigate = useNavigate();
 
   const toggleSlider = () => {
     setIsSliderOpen((prev) => !prev);
@@ -14,9 +16,24 @@ function Header({ onNavSelect }) {
 
   const navItems = [
     { id: "POS", icon: "zmdi-assignment", label: "POS", color: "orange" },
-    { id: "Transaction", icon: "zmdi-collection-text", label: "Transaction", color: "orange" },
-    { id: "Booking", icon: "zmdi-airline-seat-recline-extra", label: "Booking", color: "orange" },
-    { id: "OrdersStatus", icon: "zmdi-hourglass-alt", label: "Orders Status", color: "orange" },
+    {
+      id: "Transaction",
+      icon: "zmdi-collection-text",
+      label: "Transaction",
+      color: "orange",
+    },
+    {
+      id: "Booking",
+      icon: "zmdi-airline-seat-recline-extra",
+      label: "Booking",
+      color: "orange",
+    },
+    {
+      id: "OrdersStatus",
+      icon: "zmdi-hourglass-alt",
+      label: "Orders Status",
+      color: "orange",
+    },
   ];
 
   const handleNavClick = (id) => {
@@ -33,11 +50,18 @@ function Header({ onNavSelect }) {
             <div
               key={item.id}
               className={`flex items-center px-6 text-lg cursor-pointer ${
-                selectedOption === item.id ? "text-white font-bold" : "text-gray-400"
+                selectedOption === item.id
+                  ? "text-white font-bold"
+                  : "text-gray-400"
               }`}
               onClick={() => handleNavClick(item.id)}
             >
-              <Icon style={{ color: selectedOption === item.id ? item.color : "gray" }} icon={item.icon} />
+              <Icon
+                style={{
+                  color: selectedOption === item.id ? item.color : "gray",
+                }}
+                icon={item.icon}
+              />
               <h4 className="pl-3">{item.label}</h4>
             </div>
           ))}
@@ -50,7 +74,7 @@ function Header({ onNavSelect }) {
           />
         </div>
       </div>
-      {isSliderOpen && <Slider setIsSliderOpen={setIsSliderOpen} />}
+      {isSliderOpen && <Slider setIsSliderOpen={setIsSliderOpen} onLogout={onLogout} />}
     </header>
   );
 }

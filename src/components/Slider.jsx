@@ -8,13 +8,15 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { Icon } from "@iconify/react";
-import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Slider(props) {
-  const { setIsSliderOpen } = props;
+  const { setIsSliderOpen, onLogout } = props;
   const [state, setState] = React.useState({
     right: false,
   });
+
+  const navigate = useNavigate();
 
   const toggleDrawer = (anchor, open) => () => {
     setState({ ...state, [anchor]: open });
@@ -27,6 +29,11 @@ export default function Slider(props) {
     'zmdi-email', 'zmdi-assignment', 'zmdi-open-in-new'
   ];
 
+  const handleLogout = () => {
+    onLogout(); // Call the onLogout function passed from the parent (Header)
+    navigate("/login"); // Navigate to login page
+  };
+
   const list = (anchor) => (
     <Box
       role="presentation"
@@ -36,7 +43,7 @@ export default function Slider(props) {
       <List>
         {['People', 'Wallet', 'Food Items', 'Reviews', 'Authentication', 'Settings', 'Support', 'Terms & Conditions', 'Logout'].map((text, index) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={text === 'Logout' ? handleLogout : null}>
               <ListItemIcon>
                 <Icon style={{ color: 'orange' }} icon={icon[index]} />
               </ListItemIcon>
@@ -49,7 +56,7 @@ export default function Slider(props) {
     </Box>
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     toggleDrawer('right', true)();
   }, []);
 
@@ -71,4 +78,3 @@ export default function Slider(props) {
     </div>
   );
 }
-
