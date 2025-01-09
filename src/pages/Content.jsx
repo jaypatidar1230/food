@@ -3,6 +3,7 @@ import RightContent from "../components/RightContent";
 import LeftContent from "../components/LeftContent";
 import TransactionContent from "../components/TransactionContent";
 import BookingContent from "../components/BookingContent";
+import OrdersStatus from "../components/OrdersStatus";
 
 function Content({ selectedContent }) {
   return (
@@ -25,6 +26,11 @@ function Content({ selectedContent }) {
       {selectedContent === "Booking" && (
         <div className="w-full">
           <BookingContent />
+        </div>
+      )}
+      {selectedContent === "OrdersStatus" && (
+        <div className="w-full">
+          <OrdersStatus />
         </div>
       )}
     </div>
