@@ -18,6 +18,7 @@ function BookingContent() {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // State to control delete confirmation dialog
   const [isEditing, setIsEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
   const [newBooking, setNewBooking] = useState({
     id: null,
     date: "",
@@ -36,8 +37,11 @@ function BookingContent() {
         "https://677f9a3c0476123f76a72fa9.mockapi.io/booking"
       );
       setBookings(response.data);
+      setLoading(true);
     } catch (error) {
       console.error("Error fetching bookings:", error);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -154,49 +158,53 @@ function BookingContent() {
         </div>
       </div>
 
-      <div className="relative overflow-x-auto">
-        <table className="w-full text-sm text-left rtl:text-right text-white">
-          <thead className="text-xs uppercase bg-gray-200 text-gray-400">
-            <tr>
-              <th className="px-6 py-3">Date</th>
-              <th className="px-6 py-3">Time</th>
-              <th className="px-6 py-3">Customer</th>
-              <th className="px-6 py-3">Phone Number</th>
-              <th className="px-6 py-3">Notes</th>
-              <th className="px-6 py-3">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredBookings.map((booking) => (
-              <tr
-                key={booking.id}
-                className="odd:bg-white text-gray-900 even:bg-gray-100"
-              >
-                <td className="px-6 py-4">{booking.date}</td>
-                <td className="px-6 py-4">{booking.time}</td>
-                <td className="px-6 py-4">{booking.customerName}</td>
-                <td className="px-6 py-4">{booking.phoneNumber}</td>
-                <td className="px-6 py-4">{booking.notes}</td>
-                <td className="px-6 py-4 flex space-x-4">
-                  <button
-                    className="text-blue-600 hover:text-blue-800"
-                    onClick={() => handleOpen(booking)}
-                  >
-                    <Icon icon="mdi:pencil" className="text-xl" />
-                  </button>
-                  <button
-                    className="text-red-600 hover:text-red-800"
-                    onClick={() => handleDeleteDialogOpen(booking)}
-                  >
-                    <Icon icon="mdi:delete" className="text-xl" />
-                  </button>
-                </td>
+     
+        <div className="relative overflow-x-auto">
+          <table className="w-full text-sm text-left rtl:text-right text-white">
+            <thead className="text-xs uppercase bg-gray-200 text-gray-400">
+              <tr>
+                <th className="px-6 py-3">Date</th>
+                <th className="px-6 py-3">Time</th>
+                <th className="px-6 py-3">Customer</th>
+                <th className="px-6 py-3">Phone Number</th>
+                <th className="px-6 py-3">Notes</th>
+                <th className="px-6 py-3">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
+            </thead>
+            {loading ? (
+        <div className="text-center py-10">Loading...</div>
+      ) : (
+            <tbody>
+              {filteredBookings.map((booking) => (
+                <tr
+                  key={booking.id}
+                  className="odd:bg-white text-gray-900 even:bg-gray-100"
+                >
+                  <td className="px-6 py-4">{booking.date}</td>
+                  <td className="px-6 py-4">{booking.time}</td>
+                  <td className="px-6 py-4">{booking.customerName}</td>
+                  <td className="px-6 py-4">{booking.phoneNumber}</td>
+                  <td className="px-6 py-4">{booking.notes}</td>
+                  <td className="px-6 py-4 flex space-x-4">
+                    <button
+                      className="text-blue-600 hover:text-blue-800"
+                      onClick={() => handleOpen(booking)}
+                    >
+                      <Icon icon="mdi:pencil" className="text-xl" />
+                    </button>
+                    <button
+                      className="text-red-600 hover:text-red-800"
+                      onClick={() => handleDeleteDialogOpen(booking)}
+                    >
+                      <Icon icon="mdi:delete" className="text-xl" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+        )}
+          </table>
+        </div>
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={handleDeleteDialogClose}>
         <DialogTitle>Confirm Deletion</DialogTitle>

@@ -139,9 +139,7 @@ function TransactionContent() {
       </div>
 
       <div className="relative overflow-x-auto">
-        {loading ? (
-          <div className="text-center py-10">Loading...</div>
-        ) : (
+       
           <table className="w-full text-sm text-left rtl:text-right text-white">
             <thead className="text-xs uppercase bg-gray-200 text-gray-400">
               <tr>
@@ -171,6 +169,9 @@ function TransactionContent() {
                 </th>
               </tr>
             </thead>
+            {loading ? (
+          <div className="text-center py-10">Loading...</div>
+        ) : (
             <tbody>
               {filteredData.map((item) => (
                 <tr
@@ -209,8 +210,8 @@ function TransactionContent() {
                 </tr>
               ))}
             </tbody>
-          </table>
         )}
+          </table>
       </div>
 
       {/* MUI Dialog for confirmation */}
