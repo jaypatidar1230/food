@@ -19,8 +19,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const BASE_URL = "https://6780e96b85151f714b08732e.mockapi.io"; // Base URL for API requests
+const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dgo8zfdjj/image/upload";
+const UPLOAD_PRESET = "ml_default"; // Replace with your actual preset name
 
 function Category() {
+  // State variables
   const [categoryId, setCategoryId] = useState(0);
   const [itemName, setItemName] = useState("");
   const [bgId, setBgId] = useState(0);
@@ -39,7 +42,9 @@ function Category() {
   const [newItemCategory, setNewItemCategory] = useState("");
   const [newItemType, setNewItemType] = useState("");
   const [categoryImage, setCategoryImage] = useState(null);
+  const [categoryImagePreview, setCategoryImagePreview] = useState(null); // For previewing category image
   const [itemImage, setItemImage] = useState(null);
+  const [itemImagePreview, setItemImagePreview] = useState(null); // For previewing item image
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -61,17 +66,46 @@ function Category() {
     fetchCategories();
   }, []);
 
+  const uploadImageToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
+
+    try {
+      const response = await axios.post(CLOUDINARY_URL, formData);
+      console.log("Cloudinary Full Response:", response.data); // Debugging line
+      if (response.data && response.data.secure_url) {
+        return response.data.secure_url;
+      } else {
+        console.error(
+          "Image upload response incomplete or pending:",
+          response.data
+        );
+        return null;
+      }
+    } catch (error) {
+      console.error(
+        "Error uploading image to Cloudinary:",
+        error.response ? error.response.data : error.message
+      );
+      toast.error("Failed to upload image.");
+      return null;
+    }
+  };
+
   const handleCategoryImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setCategoryImage(URL.createObjectURL(file));
+      setCategoryImage(file);
+      setCategoryImagePreview(URL.createObjectURL(file)); // Set preview URL
     }
   };
 
   const handleItemImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setItemImage(URL.createObjectURL(file));
+      setItemImage(file);
+      setItemImagePreview(URL.createObjectURL(file)); // Set preview URL
     }
   };
 
@@ -80,20 +114,33 @@ function Category() {
       toast.error("Category title is required!");
       return;
     }
+
+    let imageUrl = "https://via.placeholder.com/75";
+    if (categoryImage) {
+      const uploadedUrl = await uploadImageToCloudinary(categoryImage);
+      if (uploadedUrl) {
+        console.log("Uploaded URL for Category:", uploadedUrl); // Debugging line
+        imageUrl = uploadedUrl;
+      }
+    }
+
     try {
-      // You would need to upload the image here and get the image URL
-      const imageUrl = categoryImage
-        ? categoryImage
-        : "https://via.placeholder.com/75";
       const response = await axios.post(`${BASE_URL}/category`, {
         title: newCategoryTitle,
         img: imageUrl,
       });
+      console.log("API Response:", response.data); // Debugging line
       setCategories((prevCategories) => [...prevCategories, response.data]);
-      setNewCategoryTitle("");
-      setCategoryImage(null);
-      toast.success("Category added successfully!");
+
+      // Reset states after successful submission
+      setNewCategoryTitle(""); // Clear category title
+      setCategoryImage(null); // Clear category image
+      setCategoryImagePreview(null); // Clear image preview
+
+      // Close the modal
       setModals((prev) => ({ ...prev, addCategory: false }));
+
+      toast.success("Category added successfully!");
     } catch (error) {
       console.error("Error adding category", error);
       toast.error("Failed to add category.");
@@ -111,8 +158,15 @@ function Category() {
       return;
     }
 
+    let imageUrl = "/assets/1.png";
+    if (itemImage) {
+      const uploadedUrl = await uploadImageToCloudinary(itemImage);
+      if (uploadedUrl) {
+        imageUrl = uploadedUrl;
+      }
+    }
+
     try {
-      const imageUrl = itemImage ? itemImage : "/assets/1.png";
       const selectedCategory = categories.find(
         (cat) => cat.id === newItemCategory
       );
@@ -141,7 +195,6 @@ function Category() {
         categoryId: newItemCategory,
       };
 
-      // Update local state (Category component state)
       setItems((prevItems) => [...prevItems, newItem]);
 
       setNewItemName("");
@@ -149,6 +202,7 @@ function Category() {
       setNewItemCategory("");
       setNewItemType("");
       setItemImage(null);
+      setItemImagePreview(null); // Clear preview
       setModals((prev) => ({ ...prev, addItem: false }));
     } catch (error) {
       console.error("Error adding item", error);
@@ -218,7 +272,6 @@ function Category() {
                     onClick={() =>
                       setModals((prev) => ({ ...prev, addItem: true }))
                     }
-                    
                   >
                     Add Item
                   </button>
@@ -246,9 +299,9 @@ function Category() {
             onChange={(e) => setNewCategoryTitle(e.target.value)}
           />
           <input type="file" onChange={handleCategoryImageChange} />
-          {categoryImage && (
+          {categoryImagePreview && (
             <img
-              src={categoryImage}
+              src={categoryImagePreview}
               alt="Preview"
               className="mt-2 w-32 h-32 object-cover"
             />
@@ -321,9 +374,9 @@ function Category() {
             </Select>
           </FormControl>
           <input type="file" onChange={handleItemImageChange} />
-          {itemImage && (
+          {itemImagePreview && (
             <img
-              src={itemImage}
+              src={itemImagePreview}
               alt="Preview"
               className="mt-2 w-32 h-32 object-cover"
             />
