@@ -10,6 +10,7 @@ import {
   TextField,
 } from "@mui/material";
 import { getDDMMYYYYDateWithTime } from "./Date";
+import HashLoader from "react-spinners/HashLoader";
 
 function TransactionContent() {
   const [data, setData] = useState([]);
@@ -139,39 +140,47 @@ function TransactionContent() {
       </div>
 
       <div className="relative overflow-x-auto">
-       
-          <table className="w-full text-sm text-left rtl:text-right text-white">
-            <thead className="text-xs uppercase bg-gray-200 text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Order num
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Name
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Amount
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Items
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Type
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Payment
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Updated On
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Action
-                </th>
+        <table className="w-full text-sm text-left rtl:text-right text-white">
+          <thead className="text-xs uppercase bg-gray-200 text-gray-400">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                Order num
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Name
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Amount
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Items
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Type
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Payment
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Updated On
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
+            </tr>
+          </thead>
+          {loading ? (
+            <tbody>
+              <tr colSpan={1}>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td className="text-center py-10 pl-10 text-black text-3xl">
+                <HashLoader />
+                </td>
               </tr>
-            </thead>
-            {loading ? (
-          <div className="text-center py-10">Loading...</div>
-        ) : (
+            </tbody>
+          ) : (
             <tbody>
               {filteredData.map((item) => (
                 <tr
@@ -210,8 +219,8 @@ function TransactionContent() {
                 </tr>
               ))}
             </tbody>
-        )}
-          </table>
+          )}
+        </table>
       </div>
 
       {/* MUI Dialog for confirmation */}

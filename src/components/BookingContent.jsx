@@ -11,6 +11,9 @@ import {
   MenuItem,
   Grid,
 } from "@mui/material";
+import { ToastContainer, toast } from "react-toastify"; // Import Toastify components
+import "react-toastify/dist/ReactToastify.css";
+import HashLoader from "react-spinners/HashLoader";
 
 function BookingContent() {
   const [bookings, setBookings] = useState([]);
@@ -40,6 +43,7 @@ function BookingContent() {
       setLoading(true);
     } catch (error) {
       console.error("Error fetching bookings:", error);
+      toast.error("Error fetching bookings"); // Show error toast
     } finally {
       setLoading(false);
     }
@@ -78,16 +82,19 @@ function BookingContent() {
           `https://677f9a3c0476123f76a72fa9.mockapi.io/booking/${newBooking.id}`,
           newBooking
         );
+        toast.success("Booking updated successfully!"); // Show success toast
       } else {
         await axios.post(
           "https://677f9a3c0476123f76a72fa9.mockapi.io/booking",
           newBooking
         );
+        toast.success("Booking added successfully!"); // Show success toast
       }
       fetchBookings();
       handleClose();
     } catch (error) {
       console.error("Error saving booking:", error);
+      toast.error("Error saving booking"); // Show error toast
     }
   };
 
@@ -99,8 +106,10 @@ function BookingContent() {
         );
         fetchBookings();
         setOpenDeleteDialog(false);
+        toast.error("Booking deleted successfully!"); // Show success toast
       } catch (error) {
         console.error("Error deleting booking:", error);
+        toast.error("Error deleting booking"); // Show error toast
       }
     }
   };
@@ -158,22 +167,29 @@ function BookingContent() {
         </div>
       </div>
 
-     
-        <div className="relative overflow-x-auto">
-          <table className="w-full text-sm text-left rtl:text-right text-white">
-            <thead className="text-xs uppercase bg-gray-200 text-gray-400">
-              <tr>
-                <th className="px-6 py-3">Date</th>
-                <th className="px-6 py-3">Time</th>
-                <th className="px-6 py-3">Customer</th>
-                <th className="px-6 py-3">Phone Number</th>
-                <th className="px-6 py-3">Notes</th>
-                <th className="px-6 py-3">Action</th>
+      <div className="relative overflow-x-auto">
+        <table className="w-full text-sm text-left rtl:text-right text-white">
+          <thead className="text-xs uppercase bg-gray-200 text-gray-400">
+            <tr>
+              <th className="px-6 py-3">Date</th>
+              <th className="px-6 py-3">Time</th>
+              <th className="px-6 py-3">Customer</th>
+              <th className="px-6 py-3">Phone Number</th>
+              <th className="px-6 py-3">Notes</th>
+              <th className="px-6 py-3">Action</th>
+            </tr>
+          </thead>
+          {loading ? (
+            <tbody>
+              <tr colSpan={1}>
+                <td></td>
+                <td></td>
+                <td className="text-center py-10 pl-20 text-black text-3xl">
+                <HashLoader />
+                </td>
               </tr>
-            </thead>
-            {loading ? (
-        <div className="text-center py-10">Loading...</div>
-      ) : (
+            </tbody>
+          ) : (
             <tbody>
               {filteredBookings.map((booking) => (
                 <tr
@@ -202,9 +218,9 @@ function BookingContent() {
                 </tr>
               ))}
             </tbody>
-        )}
-          </table>
-        </div>
+          )}
+        </table>
+      </div>
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={handleDeleteDialogClose}>
         <DialogTitle>Confirm Deletion</DialogTitle>
@@ -353,6 +369,8 @@ function BookingContent() {
           </Button>
         </DialogActions>
       </Dialog>
+      {/* ToastContainer for toast notifications */}
+      <ToastContainer />
     </div>
   );
 }
