@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import item from "../api/db_items.json";
+import axios from "axios";
 
-function Items({ categoryId, itemName }) {
+export const Items = ({ categoryId, itemName, items }) => {
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    const handleCartUpdate = () => setCart([]);
+    const handleCartUpdate = () => setCart([]); 
     window.addEventListener("cartClear", handleCartUpdate);
     handleCartUpdate(); // Initial load
 
@@ -34,7 +34,7 @@ function Items({ categoryId, itemName }) {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  const filteredItems = item.filter(
+  const filteredItems = items.filter(
     ({ categoryId: itemCategoryId, title }) =>
       (itemCategoryId === categoryId || categoryId === 0) &&
       title.toLowerCase().includes(itemName.toLowerCase())
@@ -68,6 +68,4 @@ function Items({ categoryId, itemName }) {
       ))}
     </div>
   );
-}
-
-export default Items;
+};
